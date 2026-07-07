@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Servicio Psicopedagógico | Facultad de Ingeniería - UPLA</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="crest">UPLA</div>
+    <div class="titles">
+      Servicio Psicopedagógico
+      <small>Facultad de Ingeniería &middot; Universidad Peruana Los Andes</small>
+    </div>
+  </div>
+  <nav>
+    <a href="#informacion">Información</a>
+    <a href="#escuelas">Escuelas</a>
+    <a href="#contacto">Contacto</a>
+    <a class="btn-login" href="login.html">Iniciar sesión</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow">Bienestar y acompañamiento estudiantil</span>
+      <h1>Orientación psicopedagógica para toda la comunidad de Ingeniería</h1>
+      <p id="presentacion-hero">
+        Agenda tu cita en línea, conoce tus horarios y recibe acompañamiento personalizado
+        para tu desarrollo académico y emocional durante tu formación universitaria.
+      </p>
+      <div class="hero-actions">
+        <a href="login.html" class="btn btn-gold">Agendar una cita</a>
+        <a href="#informacion" class="btn btn-outline" style="border-color:#fff;color:#fff;">Ver información del servicio</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>Horario de atención</h3>
+      <ul>
+        <li id="horario-hero">Lunes a viernes de 8:00 a.m. a 4:00 p.m.</li>
+        <li id="ubicacion-hero">Facultad de Ingeniería - Universidad Peruana Los Andes</li>
+        <li id="contacto-hero">psicopedagogico@upla.edu.pe</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="informacion">
+  <h2 class="section-title">Sobre el servicio</h2>
+  <p class="section-sub" id="presentacion-texto">Cargando información del servicio…</p>
+
+  <div class="info-strip">
+    <div class="item">
+      <div class="ico">&#128337;</div>
+      <div><h5>Horario</h5><span id="info-horario">-</span></div>
+    </div>
+    <div class="item">
+      <div class="ico">&#128205;</div>
+      <div><h5>Ubicación</h5><span id="info-ubicacion">-</span></div>
+    </div>
+    <div class="item">
+      <div class="ico">&#9742;</div>
+      <div><h5>Teléfono</h5><span id="info-telefono">-</span></div>
+    </div>
+    <div class="item">
+      <div class="ico">&#9993;</div>
+      <div><h5>Correo</h5><span id="info-email">-</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="servicios">
+  <h2 class="section-title">Servicios ofrecidos</h2>
+  <p class="section-sub">Estas son las prestaciones disponibles a través de la plataforma web.</p>
+  <div class="grid-cards" id="servicios-cards">
+    <!-- Se llena dinámicamente -->
+  </div>
+</section>
+
+<section class="section" id="escuelas">
+  <h2 class="section-title">Escuelas profesionales atendidas</h2>
+  <p class="section-sub">El servicio brinda atención a estudiantes de las siguientes escuelas de la Facultad de Ingeniería.</p>
+  <ul class="schools-list" id="escuelas-lista">
+    <!-- Se llena dinámicamente -->
+  </ul>
+</section>
+
+<section class="section" id="contacto">
+  <h2 class="section-title">¿Necesitas agendar una cita?</h2>
+  <p class="section-sub">Inicia sesión con tu cuenta de estudiante o administrativa para acceder a tu panel.</p>
+  <a href="login.html" class="btn btn-primary">Ir a iniciar sesión</a>
+</section>
+
+<footer class="footer">
+  Servicio Psicopedagógico &middot; Facultad de Ingeniería &middot; Universidad Peruana Los Andes &copy; 2026
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/utils.js"></script>
+<script>
+async function cargarInformacionPublica() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("informacion_servicio")
+      .select("*")
+      .eq("id", 1)
+      .maybeSingle();
+
+    if (error || !data) return;
+
+    document.getElementById("presentacion-hero").textContent = data.presentacion || "";
+    document.getElementById("presentacion-texto").textContent = data.presentacion || "";
+    document.getElementById("horario-hero").textContent = data.horario_atencion || "";
+    document.getElementById("ubicacion-hero").textContent = data.ubicacion || "";
+    document.getElementById("contacto-hero").textContent = data.contacto_email || "";
+
+    document.getElementById("info-horario").textContent = data.horario_atencion || "-";
+    document.getElementById("info-ubicacion").textContent = data.ubicacion || "-";
+    document.getElementById("info-telefono").textContent = data.contacto_telefono || "-";
+    document.getElementById("info-email").textContent = data.contacto_email || "-";
+
+    const servicios = (data.servicios_ofrecidos || "").split("\n").filter(Boolean);
+    document.getElementById("servicios-cards").innerHTML = servicios.map(s => `
+      <div class="card"><h4>${escapeHtml(s)}</h4><p>Disponible a través del panel del estudiante o administrativo.</p></div>
+    `).join("") || "<p class='section-sub'>Sin servicios registrados aún.</p>";
+
+    const escuelas = (data.escuelas_profesionales || "").split("\n").filter(Boolean);
+    document.getElementById("escuelas-lista").innerHTML = escuelas.map(e => `
+      <li><span class="dot"></span>${escapeHtml(e)}</li>
+    `).join("") || "<p class='section-sub'>Sin escuelas registradas aún.</p>";
+
+  } catch (e) {
+    console.error("No se pudo cargar la información pública:", e);
+  }
+}
+cargarInformacionPublica();
+</script>
+</body>
+</html>

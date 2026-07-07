@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel del Estudiante | Servicio Psicopedagógico UPLA</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand">
+      <div class="crest">UPLA</div>
+      <div><strong>Portal Estudiante</strong><small>Servicio Psicopedagógico</small></div>
+    </div>
+    <nav>
+      <button class="nav-link active" data-view="inicio"><span class="ico">&#127968;</span> Inicio</button>
+      <button class="nav-link" data-view="agendar"><span class="ico">&#128197;</span> Agendar cita</button>
+      <button class="nav-link" data-view="mis-citas"><span class="ico">&#128203;</span> Mis citas</button>
+      <button class="nav-link" data-view="informacion"><span class="ico">&#8505;</span> Información del servicio</button>
+    </nav>
+    <div class="side-foot">
+      <div class="user"><strong id="nombre-usuario">-</strong><span id="email-usuario">-</span></div>
+      <button class="btn btn-ghost" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="main-header">
+      <div>
+        <h1 id="titulo-vista">Inicio</h1>
+        <p>Bienvenido(a) a tu portal del Servicio Psicopedagógico</p>
+      </div>
+      <span class="badge-role">Estudiante</span>
+    </header>
+
+    <div class="main-content">
+
+      <!-- ============ VISTA: INICIO ============ -->
+      <section class="view active" id="view-inicio">
+        <div class="stats-row">
+          <div class="stat-card accent">
+            <div class="num" id="stat-proximas">0</div>
+            <div class="lbl">Próximas citas</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="stat-completadas">0</div>
+            <div class="lbl">Citas completadas</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="stat-total">0</div>
+            <div class="lbl">Total de citas agendadas</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Tu próxima cita</h3>
+          <div id="proxima-cita-box">
+            <div class="empty-state">
+              <div class="ico">&#128197;</div>
+              <p>Aún no tienes citas agendadas.</p>
+              <button class="btn btn-primary btn-sm" onclick="irAVista('agendar')">Agendar una cita</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VISTA: AGENDAR CITA ============ -->
+      <section class="view" id="view-agendar">
+        <div class="panel">
+          <h3>Selecciona fecha</h3>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="input-fecha">Fecha de la cita</label>
+              <input type="date" id="input-fecha" />
+            </div>
+          </div>
+          <h3 style="margin-top:18px;">Horarios disponibles</h3>
+          <p class="section-sub" style="margin-bottom:14px;">Lunes a viernes, de 8:00 a.m. a 4:00 p.m. (bloques de 1 hora).</p>
+          <div class="slot-grid" id="slot-grid"></div>
+
+          <div class="field full" style="margin-top:18px;">
+            <label for="input-motivo">Motivo de la consulta (opcional)</label>
+            <textarea id="input-motivo" rows="3" placeholder="Cuéntanos brevemente el motivo de tu cita"></textarea>
+          </div>
+
+          <div style="margin-top:16px;">
+            <button class="btn btn-primary" id="btn-confirmar-cita" disabled>Confirmar cita</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VISTA: MIS CITAS ============ -->
+      <section class="view" id="view-mis-citas">
+        <div class="section-head">
+          <h2>Mis citas agendadas</h2>
+        </div>
+        <div class="panel" style="padding:0;">
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Motivo</th><th>Estado</th></tr>
+              </thead>
+              <tbody id="tabla-mis-citas">
+                <tr><td colspan="5" style="text-align:center;color:var(--text-soft);">Cargando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VISTA: INFORMACIÓN DEL SERVICIO ============ -->
+      <section class="view" id="view-informacion">
+        <div class="readonly-note">Esta información es solo de lectura. Si algo no está actualizado, comunícalo al personal administrativo.</div>
+        <div class="panel">
+          <h3>Presentación del servicio</h3>
+          <p id="info-presentacion" class="section-sub">Cargando…</p>
+        </div>
+        <div class="info-view-grid">
+          <div class="panel">
+            <h3>Escuelas profesionales</h3>
+            <ul class="schools-list" id="info-escuelas" style="grid-template-columns:1fr;"></ul>
+          </div>
+          <div class="panel">
+            <h3>Servicios ofrecidos</h3>
+            <ul class="schools-list" id="info-servicios" style="grid-template-columns:1fr;"></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Horario, ubicación y contacto</h3>
+          <div class="info-strip" style="box-shadow:none;border:none;padding:0;">
+            <div class="item"><div class="ico">&#128337;</div><div><h5>Horario</h5><span id="info-horario2">-</span></div></div>
+            <div class="item"><div class="ico">&#128205;</div><div><h5>Ubicación</h5><span id="info-ubicacion2">-</span></div></div>
+            <div class="item"><div class="ico">&#9742;</div><div><h5>Teléfono</h5><span id="info-telefono2">-</span></div></div>
+            <div class="item"><div class="ico">&#9993;</div><div><h5>Correo</h5><span id="info-email2">-</span></div></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/estudiante.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel Administrativo | Servicio Psicopedagógico UPLA</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand">
+      <div class="crest">UPLA</div>
+      <div><strong>Panel Administrativo</strong><small>Servicio Psicopedagógico</small></div>
+    </div>
+    <nav>
+      <button class="nav-link active" data-view="inicio"><span class="ico">&#127968;</span> Inicio</button>
+      <button class="nav-link" data-view="citas"><span class="ico">&#128197;</span> Gestión de citas</button>
+      <button class="nav-link" data-view="expedientes"><span class="ico">&#128193;</span> Expedientes</button>
+      <button class="nav-link" data-view="informacion"><span class="ico">&#8505;</span> Información del servicio</button>
+    </nav>
+    <div class="side-foot">
+      <div class="user"><strong id="nombre-usuario">-</strong><span id="email-usuario">-</span></div>
+      <button class="btn btn-ghost" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="main-header">
+      <div>
+        <h1 id="titulo-vista">Inicio</h1>
+        <p>Panel de gestión del Servicio Psicopedagógico</p>
+      </div>
+      <span class="badge-role">Administrativo</span>
+    </header>
+
+    <div class="main-content">
+
+      <!-- ============ VISTA: INICIO ============ -->
+      <section class="view active" id="view-inicio">
+        <div class="stats-row">
+          <div class="stat-card accent"><div class="num" id="stat-hoy">0</div><div class="lbl">Citas para hoy</div></div>
+          <div class="stat-card"><div class="num" id="stat-pendientes">0</div><div class="lbl">Citas pendientes</div></div>
+          <div class="stat-card"><div class="num" id="stat-mes">0</div><div class="lbl">Citas este mes</div></div>
+          <div class="stat-card"><div class="num" id="stat-expedientes">0</div><div class="lbl">Expedientes registrados</div></div>
+        </div>
+
+        <div class="panel">
+          <h3>Citas de hoy</h3>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>Hora</th><th>Estudiante</th><th>Motivo</th><th>Estado</th></tr></thead>
+              <tbody id="tabla-citas-hoy"><tr><td colspan="4" style="text-align:center;color:var(--text-soft);">Cargando…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VISTA: CITAS ============ -->
+      <section class="view" id="view-citas">
+        <div class="section-head">
+          <h2>Gestión de citas del mes</h2>
+          <input type="month" id="filtro-mes" class="field" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;" />
+        </div>
+        <div class="panel" style="padding:0;">
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>Fecha</th><th>Hora</th><th>Estudiante</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody id="tabla-citas"><tr><td colspan="6" style="text-align:center;color:var(--text-soft);">Cargando…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VISTA: EXPEDIENTES ============ -->
+      <section class="view" id="view-expedientes">
+        <div class="section-head">
+          <h2>Gestión de Expedientes</h2>
+          <button class="btn btn-primary" onclick="abrirModalExpediente()">+ Nuevo Expediente</button>
+        </div>
+        <div class="panel" style="padding:0;">
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>Nombre</th><th>Código</th><th>Escuela</th><th>Última atención</th><th>Responsable</th><th>Acciones</th></tr></thead>
+              <tbody id="tabla-expedientes"><tr><td colspan="6" style="text-align:center;color:var(--text-soft);">Cargando…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VISTA: INFORMACIÓN DEL SERVICIO (EDITABLE) ============ -->
+      <section class="view" id="view-informacion">
+        <div class="section-head">
+          <h2>Información del servicio</h2>
+          <button class="btn btn-primary btn-sm" id="btn-guardar-info">Guardar cambios</button>
+        </div>
+        <div class="panel">
+          <h3>Presentación</h3>
+          <div class="field full">
+            <textarea id="edit-presentacion" rows="4"></textarea>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="panel">
+            <h3>Escuelas profesionales (una por línea)</h3>
+            <textarea id="edit-escuelas" rows="6" style="width:100%;padding:11px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;"></textarea>
+          </div>
+          <div class="panel">
+            <h3>Servicios ofrecidos (uno por línea)</h3>
+            <textarea id="edit-servicios" rows="6" style="width:100%;padding:11px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;"></textarea>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Horario, ubicación y contacto</h3>
+          <div class="form-grid">
+            <div class="field"><label>Horario de atención</label><input type="text" id="edit-horario" /></div>
+            <div class="field"><label>Ubicación</label><input type="text" id="edit-ubicacion" /></div>
+            <div class="field"><label>Teléfono de contacto</label><input type="text" id="edit-telefono" /></div>
+            <div class="field"><label>Correo de contacto</label><input type="email" id="edit-email" /></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: NUEVO / EDITAR EXPEDIENTE ============ -->
+<div class="modal-backdrop" id="modal-expediente">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-expediente-titulo">Nuevo expediente</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-expediente')">&times;</button>
+    </div>
+    <form id="form-expediente">
+      <input type="hidden" id="exp-id" />
+      <div class="form-grid">
+        <div class="field full"><label>Nombre completo</label><input type="text" id="exp-nombre" required /></div>
+        <div class="field"><label>Edad</label><input type="number" id="exp-edad" min="14" max="80" /></div>
+        <div class="field"><label>Código de matrícula</label><input type="text" id="exp-codigo" required /></div>
+        <div class="field"><label>Escuela profesional</label><input type="text" id="exp-escuela" /></div>
+        <div class="field"><label>Celular</label><input type="text" id="exp-celular" /></div>
+        <div class="field"><label>Fecha de atención</label><input type="date" id="exp-fecha" required /></div>
+        <div class="field full"><label>Motivo de consulta</label><textarea id="exp-motivo" rows="2" required></textarea></div>
+        <div class="field full"><label>Acciones tomadas</label><textarea id="exp-acciones" rows="2"></textarea></div>
+        <div class="field full"><label>Personal responsable de la atención</label><input type="text" id="exp-responsable" required /></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="cerrarModal('modal-expediente')">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btn-guardar-expediente">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: VER EXPEDIENTE ============ -->
+<div class="modal-backdrop" id="modal-ver-expediente">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Expediente completo</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-ver-expediente')">&times;</button>
+    </div>
+    <div id="ver-expediente-body"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: REPROGRAMAR CITA ============ -->
+<div class="modal-backdrop" id="modal-reprogramar">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Reprogramar cita</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-reprogramar')">&times;</button>
+    </div>
+    <form id="form-reprogramar">
+      <input type="hidden" id="repro-id" />
+      <div class="form-grid">
+        <div class="field"><label>Nueva fecha</label><input type="date" id="repro-fecha" required /></div>
+        <div class="field"><label>Nueva hora</label><input type="time" id="repro-hora" required /></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="cerrarModal('modal-reprogramar')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar nuevo horario</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
