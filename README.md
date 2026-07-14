@@ -33,11 +33,7 @@ Durante el desarrollo se identificaron diversas dificultades relacionadas con el
 - Juan Carlos Ore Alanya
 - Ruth Reyes Guerra
 
-## Documento completo
 
-El informe completo del proyecto se encuentra disponible en el siguiente archivo:
-
-📄 **[FinalMetdologiaXP.docx](FinalMetdologiaXP.docx)**
 
 ## Conclusión
 
