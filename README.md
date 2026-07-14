@@ -37,7 +37,7 @@ Durante el desarrollo se identificaron diversas dificultades relacionadas con el
 
 El informe completo del proyecto se encuentra disponible en el siguiente archivo:
 
-📄 **[FinalMetodologiaXP.pdf](FinalMetodologiaXP.pdf)**
+📄 **[FinalMetodologiaXP.doc](FinalMetodologiaXP.doc)**
 
 ## Conclusión
 
